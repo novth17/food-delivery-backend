@@ -31,6 +31,8 @@ import java.util.List;
     * Request → Filter → SecurityContextHolder → Controller
 * */
 
+//read more about jwt here
+//https://www.jwt.io/introduction#what-is-json-web-token-structure
 public class JwtTokenValidator extends OncePerRequestFilter {
 
     @Override

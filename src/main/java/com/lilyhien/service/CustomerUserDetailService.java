@@ -17,26 +17,28 @@ import java.util.List;
 @Service
 public class CustomerUserDetailService implements UserDetailsService {
 
-    //UserDetailsService depends on user repo, so we inject an instance of userRepo to this UserDetailsService when application starts up
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    //constructor dependency injection
+    public CustomerUserDetailService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username); // Spring data will parse this
 
-        if (user == null) {
-            throw new UsernameNotFoundException(username);
-        }
+        // find the user
+        User user = userRepository.findByEmail(username);
 
-        USER_ROLE role = user.getRole();
-        if (role == null) {
-            user.setRole(USER_ROLE.ROLE_CUSTOMER);
-        }
+        //check if user role is null
+        if (user == null)
+            throw new UsernameNotFoundException("User not found with email: " + username);
+
+        //handle role safely
+        USER_ROLE role = user.getRole(); //no need to check null coz we assigned in User class
+
         List<GrantedAuthority> authorities = new ArrayList<>();
-
         authorities.add(new SimpleGrantedAuthority(role.toString()));
-
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
     }
 
