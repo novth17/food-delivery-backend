@@ -25,7 +25,7 @@ public class User {
 
     private String email;
     private String password;
-    private USER_ROLE role;
+    private USER_ROLE role = USER_ROLE.ROLE_CUSTOMER;
 
     //When you are turning this object into JSON, skip this specific field. Do not send it to the user
     //for security and prevent infinite json loop
