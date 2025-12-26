@@ -3,7 +3,6 @@ package com.lilyhien.service;
 import com.lilyhien.config.JwtProvider;
 import com.lilyhien.model.User;
 import com.lilyhien.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,8 +21,7 @@ public class UserServiceImpl implements UserService {
     public User findUserByJwtToken(String jwt) throws Exception {
 
         String email = jwtProvider.getEmailFromJwtToken(jwt);
-        User user = findUserByEmail(email);
-        return null;
+        return findUserByEmail(email);
     }
 
     @Override
