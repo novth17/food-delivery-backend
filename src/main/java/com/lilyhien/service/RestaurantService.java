@@ -3,7 +3,7 @@ package com.lilyhien.service;
 import com.lilyhien.dto.FavoriteRestaurantDto;
 import com.lilyhien.model.Restaurant;
 import com.lilyhien.model.User;
-import com.lilyhien.request.CreateRestaurantRequest;
+import com.lilyhien.requestDto.CreateRestaurantRequest;
 
 import java.util.List;
 

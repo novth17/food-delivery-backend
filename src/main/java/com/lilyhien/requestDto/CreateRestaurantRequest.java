@@ -1,14 +1,13 @@
-package com.lilyhien.request;
+package com.lilyhien.requestDto;
 
 import com.lilyhien.model.Address;
 import com.lilyhien.model.ContactInformation;
 import lombok.Data;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-//need from frontend to register the request
+//CreateRestaurantRequestDto matches the "Create Restaurant" form on the frontend.
 @Data
 public class CreateRestaurantRequest {
     private long id;

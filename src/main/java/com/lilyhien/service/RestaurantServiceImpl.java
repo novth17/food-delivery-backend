@@ -7,7 +7,7 @@ import com.lilyhien.model.User;
 import com.lilyhien.repository.AddressRepository;
 import com.lilyhien.repository.RestaurantRepository;
 import com.lilyhien.repository.UserRepository;
-import com.lilyhien.request.CreateRestaurantRequest;
+import com.lilyhien.requestDto.CreateRestaurantRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
