@@ -19,6 +19,6 @@ public class FavoriteRestaurantDto {
     private List<String> images;
 
     private String description;
-    private long id;
+    private Long id;
 
 }

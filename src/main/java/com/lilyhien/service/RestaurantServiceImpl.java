@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,14 +110,35 @@ public class RestaurantServiceImpl  implements  RestaurantService {
         favDto.setTitle(restaurant.getName());
         favDto.setId(restaurantId);
 
-        //toggle the love - unlove logic
-        if (user.getFavorites().contains(favDto)) {
-            user.getFavorites().remove(favDto);
-        } else {
-            user.getFavorites().add(favDto);
+        boolean isFavorite = false;
+
+        List<FavoriteRestaurantDto> favRestaurants = user.getFavorites();
+        for (FavoriteRestaurantDto fav : favRestaurants) {
+            if (fav.getId().equals(restaurantId)) {
+                isFavorite = true;
+                break;
+            }
+        }
+
+        //check if favorite exist already, if yes, remove
+        if (isFavorite) {
+            Iterator<FavoriteRestaurantDto> it = favRestaurants.iterator();
+            while (it.hasNext()) {
+                FavoriteRestaurantDto fav = it.next();
+                if (fav.getId().equals(restaurantId)){
+                    it.remove();
+                    break;
+                }
+            }
+        } else { //else, add new
+            favRestaurants.add(favDto);
         }
         userRepository.save(user);
         return favDto;
+    }
+
+    public boolean shouldRemove(FavoriteRestaurantDto fav, Long restaurantId) {
+        return fav.getId().equals(restaurantId);
     }
 
     @Override

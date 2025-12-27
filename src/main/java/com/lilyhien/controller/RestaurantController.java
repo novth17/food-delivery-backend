@@ -49,7 +49,7 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 
-    @PutMapping("/{id/add-favorites}")
+    @PutMapping("/{id}/add-favorites")
     public ResponseEntity<FavoriteRestaurantDto> addRestaurantToFavorites(
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id
