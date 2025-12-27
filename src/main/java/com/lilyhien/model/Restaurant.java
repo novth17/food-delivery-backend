@@ -27,10 +27,13 @@ public class Restaurant {
     @OneToOne
     private User owner;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String description;
 
+    @Column(nullable = false)
     private String cuisineType;
 
     @OneToOne //one restaurant for one user, keep it consistent
@@ -53,7 +56,7 @@ public class Restaurant {
     private List<String> images;
 
     private LocalDateTime registrationDate;
-    private Boolean isOpen;
+    private boolean isOpen;
 
     @JsonIgnore //fetch restaurant data object, dont need this food list inside object, make separate new api for fetch food in restaurant
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)

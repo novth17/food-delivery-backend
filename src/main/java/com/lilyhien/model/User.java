@@ -1,7 +1,8 @@
 package com.lilyhien.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.lilyhien.dto.RestaurantDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.lilyhien.dto.FavoriteRestaurantDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,11 +21,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String fullName;
-
     private String email;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) // password should not show on FE
     private String password;
+
     private USER_ROLE role = USER_ROLE.ROLE_CUSTOMER;
 
     //When you are turning this object into JSON, skip this specific field. Do not send it to the user
@@ -34,7 +36,7 @@ public class User {
     private List<Order> orders =  new ArrayList<>();
 
     @ElementCollection
-    private List<RestaurantDto> favorites = new ArrayList<>();
+    private List<FavoriteRestaurantDto> favorites = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) // if delete this user, all of his address also be deleted
     private List<Address> addresses = new ArrayList<>();
