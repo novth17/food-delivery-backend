@@ -21,7 +21,7 @@ public class AdminRestaurantController {
     private final RestaurantService restaurantService;
 
     @PostMapping()
-    private ResponseEntity<Restaurant> createRestaurant (
+    public ResponseEntity<Restaurant> createRestaurant (
             @RequestBody CreateRestaurantRequest request,
             @RequestHeader("Authorization") String jwt)
             throws Exception
@@ -32,7 +32,7 @@ public class AdminRestaurantController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<Restaurant> updateRestaurant (
+    public ResponseEntity<Restaurant> updateRestaurant (
             @RequestBody CreateRestaurantRequest request,
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id)
@@ -44,7 +44,7 @@ public class AdminRestaurantController {
     }
 
     @DeleteMapping("/{id}")
-    private ResponseEntity<MessageResponse> deleteRestaurant (
+    public ResponseEntity<MessageResponse> deleteRestaurant (
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id)
             throws Exception
@@ -58,7 +58,7 @@ public class AdminRestaurantController {
     }
 
     @PutMapping("/{id}/status")
-    private ResponseEntity<Restaurant> updateRestaurantStatus (
+    public ResponseEntity<Restaurant> updateRestaurantStatus (
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long id)
             throws Exception
@@ -70,7 +70,7 @@ public class AdminRestaurantController {
     }
 
     @GetMapping("/user")
-    private ResponseEntity<Restaurant> findRestaurantByUserId (
+    public ResponseEntity<Restaurant> findRestaurantByUserId (
             @RequestHeader("Authorization") String jwt)
             throws Exception
     {

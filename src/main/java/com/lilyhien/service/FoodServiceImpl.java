@@ -4,15 +4,11 @@ import com.lilyhien.model.Category;
 import com.lilyhien.model.Food;
 import com.lilyhien.model.Restaurant;
 import com.lilyhien.repository.FoodRepository;
-import com.lilyhien.repository.RestaurantRepository;
 import com.lilyhien.requestDto.CreateFoodRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
