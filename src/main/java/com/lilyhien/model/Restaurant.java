@@ -59,7 +59,6 @@ public class Restaurant {
     private boolean isOpen;
 
     @JsonIgnore //fetch restaurant data object, dont need this food list inside object, make separate new api for fetch food in restaurant
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)// I don't control the foreign key; look at the Food entity to figure out how we are related.
     private List<Food> foods = new ArrayList<>();
-
 }

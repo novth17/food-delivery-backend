@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
@@ -46,5 +46,5 @@ public class Food {
     @ManyToMany
     private List<IngredientsItem> ingredients = new ArrayList<>();
 
-    private Date creationDate;
+    private LocalDate creationDate;
 }

@@ -10,7 +10,7 @@ import java.util.List;
 //CreateRestaurantRequestDto matches the "Create Restaurant" form on the frontend.
 @Data
 public class CreateRestaurantRequest {
-    private long id;
+    private Long id;
 
     @NotBlank (message = "Restaurant name is required!")
     private String name;
