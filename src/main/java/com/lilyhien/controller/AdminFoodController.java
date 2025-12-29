@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/admin/food")
 @RequiredArgsConstructor
@@ -36,7 +34,7 @@ public class AdminFoodController {
         return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<MessageResponse> removeFoodFromRestaurant(
                 @PathVariable Long id,
                 @RequestHeader("Authorization") String jwt) throws Exception
@@ -56,7 +54,6 @@ public class AdminFoodController {
     {
         User user = userService.findUserByJwtToken(jwt);
         Food food = foodService.updateAvailabilityStatus(id);
-
         return new ResponseEntity<>(food, HttpStatus.OK);
     }
 }

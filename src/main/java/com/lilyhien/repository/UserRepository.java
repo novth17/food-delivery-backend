@@ -13,5 +13,5 @@ public interface UserRepository  extends JpaRepository<User,Long> {
 
     //find...By: Tells Spring this is a "SELECT" query. SELECT * FROM users WHERE email = 'test@example.com';
     //Email: Tells Spring to look for a field (property) named email inside the User class.
-    public User findByEmail(String email);
+    User findByEmail(String email);
 }

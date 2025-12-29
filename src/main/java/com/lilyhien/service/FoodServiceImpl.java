@@ -58,8 +58,7 @@ public class FoodServiceImpl implements FoodService{
                                          Boolean isVegetarian,
                                          Boolean isSeasonal,
                                          String foodCategory) {
-        List<Food> foodList = foodRepository.findFoodRestaurantId(restaurantId);
-
+        List<Food> foodList = foodRepository.findByRestaurantId(restaurantId);
         /*
         * private boolean matchesVegetarian(Food f) {
                return isVegetarian == null || f.isVegetarian() == isVegetarian;
@@ -82,10 +81,10 @@ public class FoodServiceImpl implements FoodService{
 
     @Override
     public Food findFoodById(Long foodId) throws Exception {
-        Optional<Food> optionalFood = foodRepository.findById(foodId);
-        if (optionalFood.isEmpty())
+        Optional<Food> optFood = foodRepository.findById(foodId);
+        if (optFood.isEmpty())
             throw new Exception("Food not found with food id: " + foodId);
-        return optionalFood.get();
+        return optFood.get();
     }
 
     @Override

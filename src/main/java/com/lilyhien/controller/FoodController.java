@@ -46,6 +46,4 @@ public class FoodController {
         List<Food> foodList = foodService.getRestaurantsFood(restaurantId, isVegetarian, isSeasonal, foodCategory);
         return new ResponseEntity<>(foodList, HttpStatus.OK);
     }
-
-
 }
