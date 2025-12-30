@@ -48,6 +48,8 @@ public class IngredientsServiceImpl implements  IngredientsService {
         return ingredientsCategoryRepository.findByRestaurantId(id);
     }
 
+    //ingredientCategoryId should not be completely trusted that correct
+    //check if the person holding the key actually owns the door they are trying to unlock
     @Override
     public IngredientsItem createIngredientsItem(Long userId, String ingredientName, Long ingredientCategoryId) throws Exception {
 
@@ -63,7 +65,6 @@ public class IngredientsServiceImpl implements  IngredientsService {
             throw new Exception("You cannot add ingredients to another restaurant's category");
         }
         IngredientsItem ingredientsItem = ingredientsItemRepository.save(item);
-
         //after save, need to add to category List java object too, so they can sync with database
         ingredientsCategory.getIngredients().add(item);
 

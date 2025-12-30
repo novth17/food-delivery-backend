@@ -34,42 +34,42 @@ public class AdminFoodController {
         return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{foodId}")
     public ResponseEntity<MessageResponse> removeFoodFromRestaurant(
-            @PathVariable Long id,
+            @PathVariable Long foodId,
             @RequestHeader("Authorization") String jwt) throws Exception
     {
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
 
         // Find the food first
-        Food food = foodService.findFoodById(id);
+        Food food = foodService.findFoodById(foodId);
 
         // Does this food belong to THIS admin's restaurant?
         if (!food.getRestaurant().getId().equals(restaurant.getId())) {
             throw new Exception("You do not have permission to delete food from another restaurant.");
         }
 
-        foodService.removeFoodFromRestaurant(id);
+        foodService.removeFoodFromRestaurant(foodId);
 
         MessageResponse messageResponse = new MessageResponse();
-        messageResponse.setMessage("Food with id " + id + " deleted successfully");
+        messageResponse.setMessage("Food with id " + foodId + " deleted successfully");
         return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{foodId}")
     public ResponseEntity<Food> updateFoodAvailabilityStatus(
-            @PathVariable Long id,
+            @PathVariable Long foodId,
             @RequestHeader("Authorization") String jwt) throws Exception
     {
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
-        Food food = foodService.findFoodById(id);
+        Food food = foodService.findFoodById(foodId);
         // Ownership check
         if (!food.getRestaurant().getId().equals(restaurant.getId())) {
             throw new Exception("Unauthorized: This food does not belong to your restaurant.");
         }
-        Food updatedFood = foodService.updateAvailabilityStatus(id);
+        Food updatedFood = foodService.updateAvailabilityStatus(foodId);
         return new ResponseEntity<>(updatedFood, HttpStatus.OK);
     }
 }
