@@ -2,6 +2,7 @@ package com.lilyhien.controller;
 
 import com.lilyhien.model.IngredientsCategory;
 import com.lilyhien.model.IngredientsItem;
+import com.lilyhien.model.Restaurant;
 import com.lilyhien.model.User;
 import com.lilyhien.requestDto.CreateIngredientCategoryRequest;
 import com.lilyhien.requestDto.CreateIngredientRequest;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -48,5 +51,30 @@ public class IngredientController {
         IngredientsItem item = ingredientsService.updateStock(itemId, user.getId());
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
+
+    // Give me MY restaurant's ingredients
+    @GetMapping("/restaurant")
+    public ResponseEntity<List<IngredientsItem>> getRestaurantIngredients(
+            @RequestHeader("Authorization") String jwt) throws Exception {
+
+        // Identify the user from the token
+        User user = userService.findUserByJwtToken(jwt);
+        // Pass the user.getId() to the service
+        // service then finds the restaurant linked to this specific user.
+        List<IngredientsItem> items = ingredientsService.findRestaurantsIngredients(user.getId());
+        return new ResponseEntity<>(items, HttpStatus.OK);
+    }
+
+    @GetMapping("/restaurant/category")
+    public ResponseEntity<List<IngredientsCategory>> getRestaurantIngredientsCategory(
+            @RequestHeader("Authorization") String jwt) throws Exception {
+
+        // Identify the user from the token
+        User user = userService.findUserByJwtToken(jwt);
+
+        List<IngredientsCategory> categories = ingredientsService.findIngredientCategoryByRestaurantUserId(user.getId());
+        return new ResponseEntity<>(categories, HttpStatus.OK);
+    }
+
 
 }

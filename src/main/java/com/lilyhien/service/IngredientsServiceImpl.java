@@ -43,9 +43,12 @@ public class IngredientsServiceImpl implements  IngredientsService {
     }
 
     @Override
-    public List<IngredientsCategory> findIngredientCategoryByRestaurantId(Long id) throws Exception {
-        restaurantService.findRestaurantById(id); //it will throw exception if restaurant id is invalid
-        return ingredientsCategoryRepository.findByRestaurantId(id);
+    public List<IngredientsCategory> findIngredientCategoryByRestaurantUserId(Long userId) throws Exception {
+        // service handles the business logic, Which restaurant does this USER own?
+        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+
+        // it uses that specific restaurant's ID for the database query
+        return ingredientsCategoryRepository.findByRestaurantId(restaurant.getId());
     }
 
     //ingredientCategoryId should not be completely trusted that correct
