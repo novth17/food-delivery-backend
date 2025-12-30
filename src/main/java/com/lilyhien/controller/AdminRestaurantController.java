@@ -7,7 +7,6 @@ import com.lilyhien.response.MessageResponse;
 import com.lilyhien.service.RestaurantService;
 import com.lilyhien.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,59 +20,59 @@ public class AdminRestaurantController {
     private final RestaurantService restaurantService;
 
     @PostMapping()
-    public ResponseEntity<Restaurant> createRestaurant (
+    public ResponseEntity<Restaurant> createRestaurant(
             @RequestBody CreateRestaurantRequest request,
-            @RequestHeader("Authorization") String jwt)
-            throws Exception
-    {
+            @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.createRestaurant(request, user);
         return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Restaurant> updateRestaurant (
+    // Identify restaurant by Token.
+    @PutMapping()
+    public ResponseEntity<Restaurant> updateRestaurant(
             @RequestBody CreateRestaurantRequest request,
-            @RequestHeader("Authorization") String jwt,
-            @PathVariable Long id)
-            throws Exception
-    {
+            @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
-        Restaurant restaurant = restaurantService.updateRestaurant(id, request);
-        return new ResponseEntity<>(restaurant, HttpStatus.OK);
+
+        // Security Check: Find the restaurant owned by THIS user
+        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
+
+        // Pass the trusted ID to the service
+        Restaurant updatedRestaurant = restaurantService.updateRestaurant(restaurant.getId(), request);
+        return new ResponseEntity<>(updatedRestaurant, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<MessageResponse> deleteRestaurant (
-            @RequestHeader("Authorization") String jwt,
-            @PathVariable Long id)
-            throws Exception
-    {
+    // Identify restaurant by Token.
+    @DeleteMapping()
+    public ResponseEntity<MessageResponse> deleteRestaurant(
+            @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
-        restaurantService.deleteRestaurant(id);
+
+        // Security Check: Find the restaurant owned by THIS user
+        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
+
+        restaurantService.deleteRestaurant(restaurant.getId());
 
         MessageResponse response = new MessageResponse();
         response.setMessage("Restaurant deleted successfully");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PutMapping("/{id}/status")
-    public ResponseEntity<Restaurant> updateRestaurantStatus (
-            @RequestHeader("Authorization") String jwt,
-            @PathVariable Long id)
-            throws Exception
-    {
+    // Identify restaurant by Token.
+    @PutMapping("/status")
+    public ResponseEntity<Restaurant> updateRestaurantStatus(
+            @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
-        Restaurant restaurant = restaurantService.updateRestaurantStatus(id);
-        return new ResponseEntity<>(restaurant, HttpStatus.OK);
+        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
 
+        Restaurant updatedRestaurant = restaurantService.updateRestaurantStatus(restaurant.getId());
+        return new ResponseEntity<>(updatedRestaurant, HttpStatus.OK);
     }
 
     @GetMapping("/user")
-    public ResponseEntity<Restaurant> findRestaurantByUserId (
-            @RequestHeader("Authorization") String jwt)
-            throws Exception
-    {
+    public ResponseEntity<Restaurant> findRestaurantByUserId(
+            @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
         return new ResponseEntity<>(restaurant, HttpStatus.OK);

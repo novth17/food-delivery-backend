@@ -25,6 +25,8 @@ public class IngredientsCategory {
     @ManyToOne
     private Restaurant restaurant;
 
+    //mapped by meaning: Hibernate will automatically create a table for it (e.g., ingredients_item)
+    // with a foreign key column (e.g., category_id).
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<IngredientsItem> ingredients = new ArrayList<>();
 

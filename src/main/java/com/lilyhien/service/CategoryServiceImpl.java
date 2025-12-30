@@ -18,7 +18,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category createCategory(String name, Long userId) throws Exception {
-        Restaurant restaurant = restaurantService.findRestaurantById(userId);
+        //Look up the restaurant by the OWNER'S ID, not the Restaurant's PK
+        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
         Category category = new Category();
         category.setName(name);
         category.setRestaurant(restaurant);

@@ -1,0 +1,99 @@
+package com.lilyhien.service;
+
+import com.lilyhien.model.IngredientsCategory;
+import com.lilyhien.model.IngredientsItem;
+import com.lilyhien.model.Restaurant;
+import com.lilyhien.repository.IngredientsCategoryRepository;
+import com.lilyhien.repository.IngredientsItemRepository;
+import com.lilyhien.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@RequiredArgsConstructor
+@Service
+public class IngredientsServiceImpl implements  IngredientsService {
+
+    private final IngredientsItemRepository ingredientsItemRepository;
+    private final IngredientsCategoryRepository ingredientsCategoryRepository;
+    private final RestaurantService restaurantService;
+    private final UserRepository userRepository;
+
+    @Override
+    public IngredientsCategory createIngredientCategory(String name, Long userId) throws Exception {
+
+        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+
+        IngredientsCategory ingredientsCategory = new IngredientsCategory();
+        ingredientsCategory.setName(name);
+        ingredientsCategory.setRestaurant(restaurant);
+
+        return ingredientsCategoryRepository.save(ingredientsCategory);
+    }
+
+    @Override
+    public IngredientsCategory findIngredientCategoryById(Long id) throws Exception {
+        Optional<IngredientsCategory> optIngredientsCategory = ingredientsCategoryRepository.findById(id);
+        if (optIngredientsCategory.isEmpty()) {
+            throw new Exception("Category not found with category id: " + id);
+        }
+        return optIngredientsCategory.get();
+    }
+
+    @Override
+    public List<IngredientsCategory> findIngredientCategoryByRestaurantId(Long id) throws Exception {
+        restaurantService.findRestaurantById(id); //it will throw exception if restaurant id is invalid
+        return ingredientsCategoryRepository.findByRestaurantId(id);
+    }
+
+    @Override
+    public IngredientsItem createIngredientsItem(Long userId, String ingredientName, Long ingredientCategoryId) throws Exception {
+
+        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+        IngredientsCategory ingredientsCategory = findIngredientCategoryById(ingredientCategoryId);
+
+        IngredientsItem item = new IngredientsItem();
+        item.setName(ingredientName);
+        item.setRestaurant(restaurant);
+        item.setCategory(ingredientsCategory);
+
+        if (!ingredientsCategory.getRestaurant().getId().equals(restaurant.getId())) {
+            throw new Exception("You cannot add ingredients to another restaurant's category");
+        }
+        IngredientsItem ingredientsItem = ingredientsItemRepository.save(item);
+
+        //after save, need to add to category List java object too, so they can sync with database
+        ingredientsCategory.getIngredients().add(item);
+
+        return ingredientsItem;
+    }
+
+    @Override
+    public List<IngredientsItem> findRestaurantsIngredients(Long userId) throws Exception {
+
+        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+        return ingredientsItemRepository.findByRestaurantId(restaurant.getId());
+    }
+
+    @Override
+    public IngredientsItem updateStock(Long ingredientId, Long userId) throws Exception {
+
+        Optional<IngredientsItem> optItem = ingredientsItemRepository.findById(ingredientId);
+        if (optItem.isEmpty()) {
+            throw new Exception("Ingredient not found with item id: " + ingredientId);
+        }
+
+        IngredientsItem item = optItem.get();
+
+        //verification
+        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+        if (!item.getRestaurant().getId().equals(restaurant.getId())) {
+            throw new Exception("Unauthorized: This ingredient belongs to another restaurant.");
+        }
+
+        item.setIsInStock(!item.getIsInStock());
+        return ingredientsItemRepository.save(item);
+    }
+}

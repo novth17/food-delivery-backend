@@ -49,8 +49,14 @@ public class FoodServiceImpl implements FoodService{
     @Override
     public void removeFoodFromRestaurant(Long foodId) throws Exception {
         Food food = findFoodById(foodId);
-        food.setRestaurant(null);
-        foodRepository.save(food);
+
+        // Sync the Java side: remove food from the restaurant's internal list
+        if (food.getRestaurant() != null) {
+            food.getRestaurant().getFoods().remove(food);
+        }
+
+        // Sync the Database side: delete the record
+        foodRepository.delete(food);
     }
 
     @Override

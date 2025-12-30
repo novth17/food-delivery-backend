@@ -47,25 +47,42 @@ public class RestaurantServiceImpl  implements  RestaurantService {
 
     @Override
     public Restaurant updateRestaurant(Long restaurantId, CreateRestaurantRequest updatedRestaurant) throws Exception {
-
         Restaurant restaurant = findRestaurantById(restaurantId);
 
-        if (restaurant.getCuisineType() != null) {
+        // Check the INCOMING request (updatedRestaurant), not the DATABASE object (restaurant)
+        // If the database has "Pizza Place" and want to change it to "Burger King",
+        // check if the request actually contains a new name.
+        if (updatedRestaurant.getCuisineType() != null) {
             restaurant.setCuisineType(updatedRestaurant.getCuisineType());
         }
-        if (restaurant.getDescription() != null) {
+        if (updatedRestaurant.getDescription() != null) {
             restaurant.setDescription(updatedRestaurant.getDescription());
         }
-        if (restaurant.getName() != null) {
+        if (updatedRestaurant.getName() != null) {
             restaurant.setName(updatedRestaurant.getName());
         }
+        if (updatedRestaurant.getAddress() != null) {
+            restaurant.setAddress(updatedRestaurant.getAddress());
+        }
+        if (updatedRestaurant.getContactInformation() != null) {
+            restaurant.setContactInformation(updatedRestaurant.getContactInformation());
+        }
+        if (updatedRestaurant.getOpeningHours() != null) {
+            restaurant.setOpeningHours(updatedRestaurant.getOpeningHours());
+        }
+        if (updatedRestaurant.getImages() != null) {
+            restaurant.setImages(updatedRestaurant.getImages());
+        }
+
         return restaurantRepository.save(restaurant);
     }
 
     @Override
     public void deleteRestaurant(Long restaurantId) throws Exception {
         Restaurant restaurant = findRestaurantById(restaurantId);
-
+        // Since User -> Restaurant is unidirectional in User entity,
+        // deleting the Restaurant row is usually enough.
+        // But if ever add a 'restaurant' field to User, MUST null it here first.
         // Use the repository to remove it from the database
         // This will trigger a SQL DELETE statement via Hibernate
         restaurantRepository.delete(restaurant);
