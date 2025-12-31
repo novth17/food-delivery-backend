@@ -75,6 +75,4 @@ public class IngredientController {
         List<IngredientsCategory> categories = ingredientsService.findIngredientCategoryByRestaurantUserId(user.getId());
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
-
-
 }
