@@ -81,30 +81,42 @@ public class CartServiceImpl implements CartService{
         if (optCartItem.isEmpty()) {
             throw new Exception("Cart item not found with cart item id " + cartItemId);
         }
-
         CartItem cartItem = optCartItem.get();
         cart.getCartItems().remove(cartItem);
-
-        return null;
+        return cartRepository.save(cart);
     }
 
     @Override
     public Long calculateCartTotal(Cart cart) throws Exception {
-        return 0L;
+        if (cart == null || cart.getCartItems() == null) {
+            return 0L;
+        }
+        //go one by one cart item and plus them all together
+        Long total = 0L;
+        for (CartItem item : cart.getCartItems()) {
+            total += item.getTotalPrice();
+        }
+        return total;
     }
 
     @Override
     public Cart findCartById(Long cartId) throws Exception {
-        return null;
+        Optional<Cart> optCart = cartRepository.findById(cartId);
+        if (optCart.isEmpty()) {
+            throw new Exception("Cart not found with cart  id " + cartId);
+        }
+        return optCart.get();
     }
 
     @Override
     public Cart findCartByUserId(Long userId) throws Exception {
-        return null;
+        return cartRepository.findByCustomerId(userId);
     }
 
     @Override
     public Cart clearCart(Long userId) throws Exception {
-        return null;
+        Cart cart = findCartByUserId(userId);
+        cart.getCartItems().clear();
+        return cartRepository.save(cart);
     }
 }
