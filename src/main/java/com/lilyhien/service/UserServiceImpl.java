@@ -21,13 +21,16 @@ public class UserServiceImpl implements UserService {
     public User findUserByJwtToken(String jwt) throws Exception {
 
         String email = jwtProvider.getEmailFromJwtToken(jwt);
+        //null string check is needed because of String.valueOf() can return null
+        if (email == null || email.equals("null")) {
+            throw new Exception("Invalid or expired session. Please log in again.");
+        }
         return findUserByEmail(email);
     }
 
     @Override
     public User findUserByEmail(String email) throws Exception {
         User user = userRepository.findByEmail(email);
-
         if (user == null) {
             throw new Exception("User not found");
         }
