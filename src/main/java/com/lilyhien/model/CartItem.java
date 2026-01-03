@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.security.PrivateKey;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -28,8 +29,8 @@ public class CartItem {
 
     private int quantity;
 
-    private List<String> ingredients;
+    @ElementCollection
+    private List<String> ingredients = new ArrayList<>();
 
     private Long totalPrice;
-
 }

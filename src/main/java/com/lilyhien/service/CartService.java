@@ -2,13 +2,12 @@ package com.lilyhien.service;
 
 import com.lilyhien.model.Cart;
 import com.lilyhien.model.CartItem;
-import com.lilyhien.repository.CartRepository;
 import com.lilyhien.requestDto.AddCartItemRequest;
 
 public interface CartService {
 
     CartItem addItemToCart(AddCartItemRequest request, String jwt) throws Exception;
-    CartItem updateCartItemQuantity(Long CartItemId, int quantity) throws Exception;
+    CartItem updateCartItemQuantity(Long cartItemId, int newQuantity) throws Exception;
     Cart removeItemFromCart(Long cartItemId, String jwt) throws Exception;
 
     Long calculateCartTotal(Cart cart) throws Exception;
