@@ -13,6 +13,7 @@ public interface CartService {
     Long calculateCartTotal(Cart cart) throws Exception;
     Cart findCartById(Long cartId) throws Exception;
     Cart findCartByUserJwt(String jwt) throws Exception;
+    Cart findCartByUserId(Long userId) throws Exception;
 
     Cart clearCart(String jwt)  throws Exception;
 }
