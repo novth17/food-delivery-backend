@@ -24,7 +24,7 @@ public class IngredientsServiceImpl implements  IngredientsService {
     @Override
     public IngredientsCategory createIngredientCategory(String name, Long userId) throws Exception {
 
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(userId);
 
         IngredientsCategory ingredientsCategory = new IngredientsCategory();
         ingredientsCategory.setName(name);
@@ -45,7 +45,7 @@ public class IngredientsServiceImpl implements  IngredientsService {
     @Override
     public List<IngredientsCategory> findIngredientCategoryByRestaurantUserId(Long userId) throws Exception {
         // service handles the business logic, Which restaurant does this USER own?
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(userId);
 
         // it uses that specific restaurant's ID for the database query
         return ingredientsCategoryRepository.findByRestaurantId(restaurant.getId());
@@ -56,7 +56,7 @@ public class IngredientsServiceImpl implements  IngredientsService {
     @Override
     public IngredientsItem createIngredientsItem(Long userId, String ingredientName, Long ingredientCategoryId) throws Exception {
 
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(userId);
         IngredientsCategory ingredientsCategory = findIngredientCategoryById(ingredientCategoryId);
 
         IngredientsItem item = new IngredientsItem();
@@ -77,7 +77,7 @@ public class IngredientsServiceImpl implements  IngredientsService {
     @Override
     public List<IngredientsItem> findRestaurantsIngredients(Long userId) throws Exception {
 
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(userId);
         return ingredientsItemRepository.findByRestaurantId(restaurant.getId());
     }
 
@@ -92,7 +92,7 @@ public class IngredientsServiceImpl implements  IngredientsService {
         IngredientsItem item = optItem.get();
 
         //verification
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(userId);
         if (!item.getRestaurant().getId().equals(restaurant.getId())) {
             throw new Exception("Unauthorized: This ingredient belongs to another restaurant.");
         }

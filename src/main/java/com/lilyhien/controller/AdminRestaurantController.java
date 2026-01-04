@@ -36,7 +36,7 @@ public class AdminRestaurantController {
         User user = userService.findUserByJwtToken(jwt);
 
         // Security Check: Find the restaurant owned by THIS user
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(user.getId());
 
         // Pass the trusted ID to the service
         Restaurant updatedRestaurant = restaurantService.updateRestaurant(restaurant.getId(), request);
@@ -50,7 +50,7 @@ public class AdminRestaurantController {
         User user = userService.findUserByJwtToken(jwt);
 
         // Security Check: Find the restaurant owned by THIS user
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(user.getId());
 
         restaurantService.deleteRestaurant(restaurant.getId());
 
@@ -64,7 +64,7 @@ public class AdminRestaurantController {
     public ResponseEntity<Restaurant> updateRestaurantStatus(
             @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(user.getId());
 
         Restaurant updatedRestaurant = restaurantService.updateRestaurantStatus(restaurant.getId());
         return new ResponseEntity<>(updatedRestaurant, HttpStatus.OK);
@@ -74,7 +74,7 @@ public class AdminRestaurantController {
     public ResponseEntity<Restaurant> findRestaurantByUserId(
             @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(user.getId());
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 }

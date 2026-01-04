@@ -22,7 +22,7 @@ public interface RestaurantService {
 
     public Restaurant findRestaurantById(Long restaurantId) throws Exception;
 
-    public Restaurant getRestaurantByUserId(Long userId) throws Exception;
+    public Restaurant findRestaurantByUserId(Long userId) throws Exception;
 
     public FavoriteRestaurantDto addToFavorites(Long restaurantId, User user) throws Exception;
 

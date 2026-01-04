@@ -29,7 +29,7 @@ public class AdminFoodController {
             throws  Exception
     {
         User user = userService.findUserByJwtToken(jwt);
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(user.getId());
         Food food = foodService.createFood(request, request.getFoodCategory(), restaurant);
         return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
@@ -40,7 +40,7 @@ public class AdminFoodController {
             @RequestHeader("Authorization") String jwt) throws Exception
     {
         User user = userService.findUserByJwtToken(jwt);
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(user.getId());
 
         // Find the food first
         Food food = foodService.findFoodById(foodId);
@@ -63,7 +63,7 @@ public class AdminFoodController {
             @RequestHeader("Authorization") String jwt) throws Exception
     {
         User user = userService.findUserByJwtToken(jwt);
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(user.getId());
         Food food = foodService.findFoodById(foodId);
         // Ownership check
         if (!food.getRestaurant().getId().equals(restaurant.getId())) {

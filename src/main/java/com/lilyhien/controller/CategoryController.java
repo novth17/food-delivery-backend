@@ -42,7 +42,7 @@ public class CategoryController {
     {
         User user = userService.findUserByJwtToken(jwt);
 
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(user.getId());
+        Restaurant restaurant = restaurantService.findRestaurantByUserId(user.getId());
         List<Category> newCategoryList = categoryService.findCategoryByRestaurantId(restaurant.getId());
         return new ResponseEntity<>(newCategoryList, HttpStatus.OK);
     }
