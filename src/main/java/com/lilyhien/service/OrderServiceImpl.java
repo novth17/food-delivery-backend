@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -76,22 +77,48 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Order updateOrder(Long orderId, String orderStatus) throws Exception {
-        return null;
+    public Order updateOrder(Long orderId, OrderStatus newOrderStatus) throws Exception {
+        Order order = findOrderById(orderId);
+        if (order.getOrderStatus() == OrderStatus.DELIVERED) {
+            throw new Exception("Order has already been delivered and cannot be modified.");
+        }
+        if (order.getOrderStatus() == newOrderStatus) {
+            return order;
+        }
+        order.setOrderStatus(newOrderStatus);
+        return orderRepository.save(order);
     }
 
     @Override
     public void cancelOrder(Long orderId) throws Exception {
-
+        if (!orderRepository.existsById(orderId)) {
+            throw new Exception("Order not found with id: " + orderId);
+        }
+        orderRepository.deleteById(orderId);
     }
 
     @Override
     public List<Order> getUserOrder(Long userId) throws Exception {
-        return List.of();
+        return orderRepository.findByCustomerId(userId);
+    }
+
+    //uses the Java Stream API to filter a list of object, look every order and keep only what matches orderStatus
+    @Override
+    public List<Order> getRestaurantOrders(Long restaurantId, OrderStatus orderStatus) throws Exception {
+        List<Order> orderList = orderRepository.findByRestaurantId(restaurantId);
+        if (orderStatus != null) {
+            return orderList.stream()
+                    .filter(order -> order.getOrderStatus() == orderStatus)
+                    .toList();
+        }
+        return orderList;
     }
 
     @Override
-    public List<Order> getRestaurantOrders(Long restaurantId, String orderStatus) throws Exception {
-        return List.of();
+    public Order findOrderById(Long orderId) throws Exception {
+        Optional<Order> optOrder = orderRepository.findById(orderId);
+        if (optOrder.isEmpty())
+            throw new Exception("Order not found with id " + orderId);
+        return optOrder.get();
     }
 }
