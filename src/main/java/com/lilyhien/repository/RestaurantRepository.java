@@ -16,5 +16,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
     Restaurant findByOwnerId(Long userId);
 
-    Restaurant findRestaurantsById(Long id);
+    Restaurant findRestaurantsById(Long id) throws Exception;
 }

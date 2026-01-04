@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,28 +26,29 @@ public class Order {
     private Long id;
 
     @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "customer_id")
     private User customer;
 
     @JsonIgnore
     @ManyToOne
     private Restaurant restaurant;
 
-    private Long totalAmount;
 
-    private String orderStatus;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus;
 
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @ManyToOne //one address can have many orders, but one order can belong to 1 address
+    @JoinColumn(name = "address_id")
     private Address deliveryAddress;
 
-    @OneToMany //one order can have many order items
+    //one order can have many order items
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();;
 
-    //private Payment payment;
-
     private int totalItem;
-
-    private int totalPrice;
+    private Long totalPrice;
 
 }

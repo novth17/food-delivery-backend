@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class CartServiceImpl implements CartService{
+public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
     private final UserService userService;
@@ -111,7 +111,16 @@ public class CartServiceImpl implements CartService{
     @Override
     public Cart findCartByUserJwt(String jwt) throws Exception {
        User user = userService.findUserByJwtToken(jwt);
-       return cartRepository.findByCustomerId(user.getId());
+       Cart cart = cartRepository.findByCustomerId(user.getId());
+       cart.setTotal(calculateCartTotal(cart));
+       return cart;
+    }
+
+    @Override
+    public Cart findCartByUserId(Long userId) throws Exception {
+        Cart cart = cartRepository.findByCustomerId(userId);
+        cart.setTotal(calculateCartTotal(cart));
+        return cart;
     }
 
     @Override

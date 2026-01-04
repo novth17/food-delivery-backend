@@ -38,6 +38,6 @@ public class User {
     @ElementCollection
     private List<FavoriteRestaurantDto> favorites = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true) // if delete this user, all of his address also be deleted
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true) // if delete this user, all of his address also be deleted
     private List<Address> addresses = new ArrayList<>();
 }

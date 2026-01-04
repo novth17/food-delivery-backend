@@ -3,6 +3,7 @@ package com.lilyhien.service;
 import com.lilyhien.model.*;
 import com.lilyhien.repository.*;
 import com.lilyhien.requestDto.OrderRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,50 +18,62 @@ public class OrderServiceImpl implements OrderService{
 
     private final RestaurantRepository restaurantRepository;
     private final OrderItemRepository orderItemRepository;
-    private final OrderRepository orderRepository;
-    private final AddressRepository addressRepository;
     private final UserRepository userRepository;
     private final CartService cartService;
-    private final UserService userService;
-
-
+    private final OrderRepository orderRepository;
     @Override
+    @Transactional
     public Order createOrder(OrderRequest request, User user) throws Exception {
-        Address deliveryAddress = request.getDeliveryAddress();
-        Address savedAddresses = addressRepository.save(deliveryAddress);
 
-        //if user account don't have this address then save it to database
-        if (!user.getAddresses().contains(savedAddresses)) {
-            user.getAddresses().add(savedAddresses);
-            userRepository.save(user);
-        }
-        Restaurant restaurant = restaurantRepository.findRestaurantsById(request.getRestaurantId());
-
-        Order order = new Order();
-        order.setCustomer(user);
-        order.setCreatedAt(new Date());
-        order.setOrderStatus("PENDING");
-        order.setDeliveryAddress(savedAddresses);
-
-        order.setRestaurant(restaurant);
-
-
+        // 1. Validate cart
         Cart cart = cartService.findCartByUserId(user.getId());
+        if (cart == null || cart.getCartItems().isEmpty()) {
+            throw new Exception("Cart is empty. Cannot create order.");
+        }
 
-        List <OrderItem> orderItems = new ArrayList<>();
+        // 2. Find restaurant
+        Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId())
+                .orElseThrow(() -> new Exception("Restaurant not found with id: " + request.getRestaurantId()));
 
+        // 3. Handle delivery address
+        Address deliveryAddress = request.getDeliveryAddress();
+        deliveryAddress.setUser(user);
+        user.getAddresses().add(deliveryAddress);
+        // Address is saved via User Cascade or by line below
+        userRepository.save(user);
+
+        // 4. Create order
+        Order newOrder = new Order();
+        newOrder.setCustomer(user);
+        newOrder.setRestaurant(restaurant);
+        newOrder.setOrderStatus(OrderStatus.PENDING);
+        newOrder.setCreatedAt(LocalDateTime.now());
+        newOrder.setDeliveryAddress(deliveryAddress);
+
+        // 5. Create order items (No manual saves needed!)
+        List<OrderItem> orderItems = new ArrayList<>();
         for (CartItem cartItem : cart.getCartItems()) {
             OrderItem orderItem = new OrderItem();
             orderItem.setFood(cartItem.getFood());
-            orderItem.setIngredients(cartItem.getIngredients());
             orderItem.setQuantity(cartItem.getQuantity());
             orderItem.setTotalPrice(cartItem.getTotalPrice());
+            orderItem.setIngredients(cartItem.getIngredients());
 
-            OrderItem savedItem = orderItemRepository.save(orderItem);
-            orderItems.add(savedItem);
+            // Link child to parent
+            orderItem.setOrder(newOrder);
+            orderItems.add(orderItem);
         }
+        newOrder.setItems(orderItems);
+        newOrder.setTotalPrice(cartService.calculateCartTotal(cart));
 
-        return ;
+        // 6. The Single Save. This saves Order and all OrderItems.
+        // It also links to the Restaurant via the FK in the Order table.
+        Order savedOrder = orderRepository.save(newOrder);
+
+        // 8. Clear the cart - will do inb controller
+       // cartService.clearCart(user.getId());
+
+        return savedOrder;
     }
 
     @Override
