@@ -49,29 +49,34 @@ public class RestaurantServiceImpl  implements  RestaurantService {
     public Restaurant updateRestaurant(Long restaurantId, CreateRestaurantRequest updatedRestaurant) throws Exception {
         Restaurant restaurant = findRestaurantById(restaurantId);
 
-        // Check the INCOMING request (updatedRestaurant), not the DATABASE object (restaurant)
-        // If the database has "Pizza Place" and want to change it to "Burger King",
-        // check if the request actually contains a new name.
-        if (updatedRestaurant.getCuisineType() != null) {
+        if (updatedRestaurant.getCuisineType() != null)
             restaurant.setCuisineType(updatedRestaurant.getCuisineType());
-        }
-        if (updatedRestaurant.getDescription() != null) {
+        if (updatedRestaurant.getDescription() != null)
             restaurant.setDescription(updatedRestaurant.getDescription());
-        }
-        if (updatedRestaurant.getName() != null) {
+        if (updatedRestaurant.getName() != null)
             restaurant.setName(updatedRestaurant.getName());
-        }
-        if (updatedRestaurant.getAddress() != null) {
-            restaurant.setAddress(updatedRestaurant.getAddress());
-        }
-        if (updatedRestaurant.getContactInformation() != null) {
+        if (updatedRestaurant.getContactInformation() != null)
             restaurant.setContactInformation(updatedRestaurant.getContactInformation());
-        }
-        if (updatedRestaurant.getOpeningHours() != null) {
+        if (updatedRestaurant.getOpeningHours() != null)
             restaurant.setOpeningHours(updatedRestaurant.getOpeningHours());
-        }
-        if (updatedRestaurant.getImages() != null) {
+        if (updatedRestaurant.getImages() != null)
             restaurant.setImages(updatedRestaurant.getImages());
+
+        //only update the address when the incoming address is not null!
+        if (updatedRestaurant.getAddress() != null) {
+            Address existing = restaurant.getAddress();
+            Address incoming = updatedRestaurant.getAddress();
+
+            if (incoming.getStreetAddress() != null)
+                existing.setStreetAddress(incoming.getStreetAddress());
+            if (incoming.getCity() != null)
+                existing.setCity(incoming.getCity());
+            if (incoming.getStateProvince() != null)
+                existing.setStateProvince(incoming.getStateProvince());
+            if (incoming.getPostalCode() != null)
+                existing.setPostalCode(incoming.getPostalCode());
+            if (incoming.getCountry() != null)
+                existing.setCountry(incoming.getCountry());
         }
 
         return restaurantRepository.save(restaurant);
