@@ -2,9 +2,11 @@ package com.lilyhien.controller;
 
 import com.lilyhien.model.Cart;
 import com.lilyhien.model.CartItem;
+import com.lilyhien.model.User;
 import com.lilyhien.requestDto.AddCartItemRequest;
 import com.lilyhien.requestDto.UpdateCartItemRequest;
 import com.lilyhien.service.CartService;
+import com.lilyhien.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
 
     private final CartService cartService;
+    private final UserService userService;
 
     @PutMapping("/cart/add")
     public ResponseEntity<CartItem> addItemToCart(
@@ -47,7 +50,8 @@ public class CartController {
     @PutMapping("/cart/clear")
     public ResponseEntity<Cart> clearCart(
             @RequestHeader("Authorization") String jwt) throws Exception {
-        Cart clearCart = cartService.clearCart(jwt);
+        User user = userService.findUserByJwtToken(jwt);
+        Cart clearCart = cartService.clearCart(user.getId());
         return new ResponseEntity<>(clearCart,HttpStatus.OK);
     }
 

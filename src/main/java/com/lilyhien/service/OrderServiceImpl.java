@@ -70,8 +70,8 @@ public class OrderServiceImpl implements OrderService{
         // It also links to the Restaurant via the FK in the Order table.
         Order savedOrder = orderRepository.save(newOrder);
 
-        // 8. Clear the cart - will do inb controller
-       // cartService.clearCart(user.getId());
+        //7. Clear the cart after order completed
+        cartService.clearCart(user.getId());
 
         return savedOrder;
     }
