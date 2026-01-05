@@ -5,6 +5,7 @@ import com.lilyhien.repository.CartItemRepository;
 import com.lilyhien.repository.CartRepository;
 import com.lilyhien.repository.IngredientsItemRepository;
 import com.lilyhien.requestDto.AddCartItemRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;

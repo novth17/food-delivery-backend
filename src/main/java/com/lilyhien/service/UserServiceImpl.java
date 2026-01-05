@@ -3,9 +3,11 @@ package com.lilyhien.service;
 import com.lilyhien.config.JwtProvider;
 import com.lilyhien.model.User;
 import com.lilyhien.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
+//@Transactional no need yet because here only perform read
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;

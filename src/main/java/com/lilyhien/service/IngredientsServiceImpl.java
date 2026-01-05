@@ -6,6 +6,7 @@ import com.lilyhien.model.Restaurant;
 import com.lilyhien.repository.IngredientsCategoryRepository;
 import com.lilyhien.repository.IngredientsItemRepository;
 import com.lilyhien.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class IngredientsServiceImpl implements  IngredientsService {
 
     private final IngredientsItemRepository ingredientsItemRepository;

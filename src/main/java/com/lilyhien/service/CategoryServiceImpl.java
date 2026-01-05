@@ -3,6 +3,7 @@ package com.lilyhien.service;
 import com.lilyhien.model.Category;
 import com.lilyhien.model.Restaurant;
 import com.lilyhien.repository.CategoryRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;

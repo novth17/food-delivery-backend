@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class OrderServiceImpl implements OrderService{
 
     private final RestaurantRepository restaurantRepository;
