@@ -8,6 +8,7 @@ import com.lilyhien.repository.AddressRepository;
 import com.lilyhien.repository.RestaurantRepository;
 import com.lilyhien.repository.UserRepository;
 import com.lilyhien.requestDto.CreateRestaurantRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class RestaurantServiceImpl  implements  RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
@@ -132,28 +134,9 @@ public class RestaurantServiceImpl  implements  RestaurantService {
         favDto.setTitle(restaurant.getName());
         favDto.setId(restaurantId);
 
-        boolean isFavorite = false;
-
-        List<FavoriteRestaurantDto> favRestaurants = user.getFavorites();
-        for (FavoriteRestaurantDto fav : favRestaurants) {
-            if (fav.getId().equals(restaurantId)) {
-                isFavorite = true;
-                break;
-            }
-        }
-
-        //check if favorite exist already, if yes, remove
-        if (isFavorite) {
-            Iterator<FavoriteRestaurantDto> it = favRestaurants.iterator();
-            while (it.hasNext()) {
-                FavoriteRestaurantDto fav = it.next();
-                if (fav.getId().equals(restaurantId)){
-                    it.remove();
-                    break;
-                }
-            }
-        } else { //else, add new
-            favRestaurants.add(favDto);
+        boolean wasRemoved = user.getFavorites().removeIf(fav -> fav.getId().equals(restaurantId));
+        if (!wasRemoved) {
+            user.getFavorites().add(favDto);
         }
         userRepository.save(user);
         return favDto;

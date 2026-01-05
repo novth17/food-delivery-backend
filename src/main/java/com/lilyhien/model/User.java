@@ -9,7 +9,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -36,7 +38,7 @@ public class User {
     private List<Order> orders =  new ArrayList<>();
 
     @ElementCollection
-    private List<FavoriteRestaurantDto> favorites = new ArrayList<>();
+    private Set<FavoriteRestaurantDto> favorites = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true) // if delete this user, all of his address also be deleted
     private List<Address> addresses = new ArrayList<>();
