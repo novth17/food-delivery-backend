@@ -21,7 +21,7 @@ public class FavoriteRestaurantDto {
     private String title;
 
     @Column(length = 1000)
-    private List<String> images;
+    private String thumbnailImage;
 
     private String description;
 
