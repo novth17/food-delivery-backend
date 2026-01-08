@@ -37,7 +37,7 @@ public class CartServiceImpl implements CartService {
             if (cartItem.getFood().getId().equals(food.getId())) {
                 List<String> dbIngredients = new ArrayList<>(cartItem.getIngredients());
                 java.util.Collections.sort(dbIngredients);
-                // FOUND IT: Exact match, just update the quantity
+                // Exact match, just update the quantity
                 if (dbIngredients.equals(reqIngredients)) {
                     int newQuantity = cartItem.getQuantity() + request.getQuantity();
                     return updateCartItemQuantity(cartItem.getId(), newQuantity);

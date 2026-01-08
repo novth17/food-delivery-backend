@@ -17,9 +17,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import java.util.Arrays;
 import java.util.Collections;
 
-//dude, I’ve used both Spring Security and Ktor authentication, and they solve the same problems at different abstraction levels.
-//Spring config defines the object graph and framework behavior at startup. The application logic runs later using that configuration.
-
 /*
  * In Spring, a Bean is an object whose lifecycle is managed by the IoC (Inversion of Control) container.
  * https://docs.spring.io/spring-framework/reference/core/beans/introduction.html
