@@ -45,8 +45,8 @@ public class AdminOrderController {
     @PutMapping("/order/restaurant/{orderId}/{orderStatus}")
     public ResponseEntity<Order> updateOrderStatus(
             @RequestHeader("Authorization") String jwt,
-            @PathVariable(required = false) Long orderId,
-            @PathVariable(required = false) String orderStatus
+            @PathVariable Long orderId,
+            @PathVariable String orderStatus
     ) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.findRestaurantByUserId(user.getId());
