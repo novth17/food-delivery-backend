@@ -1,5 +1,6 @@
 package com.lilyhien.service;
 
+import com.lilyhien.exception.ResourceNotFoundException;
 import com.lilyhien.model.*;
 import com.lilyhien.repository.CartItemRepository;
 import com.lilyhien.repository.CartRepository;
@@ -63,7 +64,7 @@ public class CartServiceImpl implements CartService {
 
         Optional<CartItem> optCartItem = cartItemRepository.findById(cartItemId);
         if (optCartItem.isEmpty()) {
-            throw new Exception("Cart item not found with cart item id " + cartItemId);
+            throw new ResourceNotFoundException("Cart item not found with cart item id " + cartItemId);
         }
 
         CartItem cartItem = optCartItem.get();
@@ -81,7 +82,7 @@ public class CartServiceImpl implements CartService {
 
         Optional<CartItem> optCartItem = cartItemRepository.findById(cartItemId);
         if (optCartItem.isEmpty()) {
-            throw new Exception("Cart item not found with cart item id " + cartItemId);
+            throw new ResourceNotFoundException("Cart item not found with cart item id " + cartItemId);
         }
         CartItem cartItem = optCartItem.get();
         cart.getCartItems().remove(cartItem);
@@ -105,7 +106,7 @@ public class CartServiceImpl implements CartService {
     public Cart findCartById(Long cartId) throws Exception {
         Optional<Cart> optCart = cartRepository.findById(cartId);
         if (optCart.isEmpty()) {
-            throw new Exception("Cart not found with cart  id " + cartId);
+            throw new ResourceNotFoundException("Cart not found with cart  id " + cartId);
         }
         return optCart.get();
     }

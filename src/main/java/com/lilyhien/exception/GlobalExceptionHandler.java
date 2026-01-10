@@ -32,6 +32,11 @@ public class GlobalExceptionHandler {
         return buildResponse(e, req, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ConflictExceptionHandler.class)
+    public ResponseEntity<ApiErrorDto> handleConflict(ValidationException e, HttpServletRequest req) {
+        return buildResponse(e, req, HttpStatus.CONFLICT); //409 - email that exists
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorDto> handleGlobalException(Exception e, HttpServletRequest req) {
         // from lombok, works with SLF4J
@@ -58,6 +63,13 @@ public class GlobalExceptionHandler {
     private ResponseEntity<ApiErrorDto> buildResponse(Exception e, HttpServletRequest request, HttpStatus status) {
         String path = request.getRequestURI();
         ApiErrorDto payload = new ApiErrorDto(status, e.getMessage(), path);
+        return new ResponseEntity<>(payload, status);
+    }
+
+    //method overloading to accept raw string too
+    private ResponseEntity<ApiErrorDto> buildResponse(String message, HttpServletRequest request, HttpStatus status) {
+        String path = request.getRequestURI();
+        ApiErrorDto payload = new ApiErrorDto(status, message, path);
         return new ResponseEntity<>(payload, status);
     }
 }

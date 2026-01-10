@@ -1,5 +1,7 @@
 package com.lilyhien.service;
 
+import com.lilyhien.exception.ResourceNotFoundException;
+import com.lilyhien.exception.ValidationException;
 import com.lilyhien.model.*;
 import com.lilyhien.repository.*;
 import com.lilyhien.requestDto.OrderRequest;
@@ -29,12 +31,12 @@ public class OrderServiceImpl implements OrderService{
         // 1. Validate cart
         Cart cart = cartService.findCartByUserId(user.getId());
         if (cart == null || cart.getCartItems().isEmpty()) {
-            throw new Exception("Cart is empty. Cannot create order.");
+            throw new ValidationException("Cart is empty. Cannot create order.");
         }
 
         // 2. Find restaurant
         Restaurant restaurant = restaurantRepository.findById(request.getRestaurantId())
-                .orElseThrow(() -> new Exception("Restaurant not found with id: " + request.getRestaurantId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found with id: " + request.getRestaurantId()));
 
         // 3. Handle delivery address
         Address deliveryAddress = request.getDeliveryAddress();
@@ -81,7 +83,7 @@ public class OrderServiceImpl implements OrderService{
     public Order updateOrder(Long orderId, OrderStatus newOrderStatus) throws Exception {
         Order order = findOrderById(orderId);
         if (order.getOrderStatus() == OrderStatus.DELIVERED) {
-            throw new Exception("Order has already been delivered and cannot be modified.");
+            throw new ValidationException("Order has already been delivered and cannot be modified.");
         }
         if (order.getOrderStatus() == newOrderStatus) {
             return order;
@@ -93,7 +95,7 @@ public class OrderServiceImpl implements OrderService{
     @Override
     public void cancelOrder(Long orderId) throws Exception {
         if (!orderRepository.existsById(orderId)) {
-            throw new Exception("Order not found with id: " + orderId);
+            throw new ResourceNotFoundException("Order not found with id: " + orderId);
         }
         orderRepository.deleteById(orderId);
     }
@@ -119,7 +121,7 @@ public class OrderServiceImpl implements OrderService{
     public Order findOrderById(Long orderId) throws Exception {
         Optional<Order> optOrder = orderRepository.findById(orderId);
         if (optOrder.isEmpty())
-            throw new Exception("Order not found with id " + orderId);
+            throw new ResourceNotFoundException("Order not found with id " + orderId);
         return optOrder.get();
     }
 }

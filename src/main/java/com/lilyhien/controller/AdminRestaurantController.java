@@ -6,6 +6,7 @@ import com.lilyhien.requestDto.CreateRestaurantRequest;
 import com.lilyhien.response.MessageResponse;
 import com.lilyhien.service.RestaurantService;
 import com.lilyhien.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class AdminRestaurantController {
 
     @PostMapping()
     public ResponseEntity<Restaurant> createRestaurant(
-            @RequestBody CreateRestaurantRequest request,
+            @Valid @RequestBody CreateRestaurantRequest request,
             @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.createRestaurant(request, user);
@@ -31,7 +32,7 @@ public class AdminRestaurantController {
     // Identify restaurant by Token.
     @PutMapping()
     public ResponseEntity<Restaurant> updateRestaurant(
-            @RequestBody CreateRestaurantRequest request,
+            @Valid @RequestBody CreateRestaurantRequest request,
             @RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
 

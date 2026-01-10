@@ -1,5 +1,6 @@
 package com.lilyhien.service;
 
+import com.lilyhien.exception.ResourceNotFoundException;
 import com.lilyhien.model.Category;
 import com.lilyhien.model.Restaurant;
 import com.lilyhien.repository.CategoryRepository;
@@ -37,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Category findCategoryById(Long categoryId) throws Exception {
         Optional<Category> optCategory = categoryRepository.findById(categoryId);
         if (optCategory.isEmpty())
-            throw new Exception("Category not found with category id: " + categoryId);
+            throw new ResourceNotFoundException("Category not found with category id: " + categoryId);
         return optCategory.get();
     }
 }

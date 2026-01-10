@@ -1,6 +1,7 @@
 package com.lilyhien.service;
 
 import com.lilyhien.dto.FavoriteRestaurantDto;
+import com.lilyhien.exception.ResourceNotFoundException;
 import com.lilyhien.model.Address;
 import com.lilyhien.model.Restaurant;
 import com.lilyhien.model.User;
@@ -110,7 +111,7 @@ public class RestaurantServiceImpl  implements  RestaurantService {
         //opt is a box can contain 0 or 1 restaurant, if the "box" is empty, throw. if not, get the restaurant from the box
         Optional<Restaurant> optRestaurant = restaurantRepository.findById(restaurantId);
         if (optRestaurant.isEmpty()) {
-            throw new Exception("Restaurant not found with restaurant id: " + restaurantId);
+            throw new ResourceNotFoundException("Restaurant not found with restaurant id: " + restaurantId);
         }
         return optRestaurant.get();
     }
@@ -119,7 +120,7 @@ public class RestaurantServiceImpl  implements  RestaurantService {
     public Restaurant findRestaurantByUserId(Long userId) throws Exception {
         Restaurant restaurant = restaurantRepository.findByOwnerId(userId);
         if (restaurant == null) {
-            throw new Exception("Restaurant not found with owner id: " + userId);
+            throw new ResourceNotFoundException("Restaurant not found with owner id: " + userId);
         }
         return restaurant;
     }

@@ -1,6 +1,8 @@
 package com.lilyhien.controller;
 
 
+import com.lilyhien.exception.UnauthorizedException;
+import com.lilyhien.exception.ValidationException;
 import com.lilyhien.model.Order;
 import com.lilyhien.model.OrderStatus;
 import com.lilyhien.model.Restaurant;
@@ -51,7 +53,7 @@ public class AdminOrderController {
 
         Order toVerifyOrder = orderService.findOrderById(orderId);
         if (!toVerifyOrder.getRestaurant().getId().equals(restaurant.getId()))
-            throw new Exception("You do not have permission to update an order for another restaurant.");
+            throw new UnauthorizedException("You do not have permission to update an order for another restaurant.");
 
         Order order = orderService.updateOrder(orderId, convertToEnum(orderStatus));
         return new ResponseEntity<>(order, HttpStatus.OK);
@@ -61,7 +63,7 @@ public class AdminOrderController {
         try {
             return OrderStatus.valueOf(statusString.toUpperCase().trim());
         } catch (IllegalArgumentException | NullPointerException e) {
-            throw new Exception("Invalid status: " + statusString + ". Please use a valid OrderStatus.");
+            throw new ValidationException("Invalid status: " + statusString + ". Please use a valid OrderStatus.");
         }
     }
 }

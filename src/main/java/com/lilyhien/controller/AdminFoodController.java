@@ -1,5 +1,6 @@
 package com.lilyhien.controller;
 
+import com.lilyhien.exception.UnauthorizedException;
 import com.lilyhien.model.Food;
 import com.lilyhien.model.Restaurant;
 import com.lilyhien.model.User;
@@ -27,7 +28,7 @@ public class AdminFoodController {
     public ResponseEntity<Food> createFood(
             @Valid @RequestBody CreateFoodRequest request,
             @RequestHeader("Authorization") String jwt)
-            throws  Exception
+            throws Exception
     {
         User user = userService.findUserByJwtToken(jwt);
         Restaurant restaurant = restaurantService.findRestaurantByUserId(user.getId());
@@ -48,7 +49,7 @@ public class AdminFoodController {
 
         // Does this food belong to THIS admin's restaurant?
         if (!food.getRestaurant().getId().equals(restaurant.getId())) {
-            throw new Exception("You do not have permission to delete food from another restaurant.");
+            throw new UnauthorizedException("You do not have permission to delete food from another restaurant.");
         }
 
         foodService.removeFoodFromRestaurant(foodId);
@@ -68,7 +69,7 @@ public class AdminFoodController {
         Food food = foodService.findFoodById(foodId);
         // Ownership check
         if (!food.getRestaurant().getId().equals(restaurant.getId())) {
-            throw new Exception("Unauthorized: This food does not belong to your restaurant.");
+            throw new UnauthorizedException("Unauthorized: This food does not belong to your restaurant.");
         }
         Food updatedFood = foodService.updateAvailabilityStatus(foodId);
         return new ResponseEntity<>(updatedFood, HttpStatus.OK);

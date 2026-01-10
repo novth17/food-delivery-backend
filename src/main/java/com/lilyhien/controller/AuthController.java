@@ -1,6 +1,8 @@
 package com.lilyhien.controller;
 
 import com.lilyhien.config.JwtProvider;
+import com.lilyhien.exception.ConflictExceptionHandler;
+import com.lilyhien.exception.ValidationException;
 import com.lilyhien.model.Cart;
 import com.lilyhien.model.USER_ROLE;
 import com.lilyhien.model.User;
@@ -44,7 +46,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> createUser(@Valid @RequestBody User user) throws Exception {
 
         if (emailExists(user.getEmail())) {
-            throw new Exception("Email is already in used with another account.");
+            throw new ConflictExceptionHandler("Email is already in used with another account.");
         }
         User createUser = new User();
         createUser.setEmail(user.getEmail());

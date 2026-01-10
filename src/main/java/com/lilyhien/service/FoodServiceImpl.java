@@ -1,5 +1,6 @@
 package com.lilyhien.service;
 
+import com.lilyhien.exception.ResourceNotFoundException;
 import com.lilyhien.model.Category;
 import com.lilyhien.model.Food;
 import com.lilyhien.model.Restaurant;
@@ -89,7 +90,7 @@ public class FoodServiceImpl implements FoodService{
     public Food findFoodById(Long foodId) throws Exception {
         Optional<Food> optFood = foodRepository.findById(foodId);
         if (optFood.isEmpty())
-            throw new Exception("Food not found with food id: " + foodId);
+            throw new ResourceNotFoundException("Food not found with food id: " + foodId);
         return optFood.get();
     }
 

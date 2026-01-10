@@ -1,5 +1,8 @@
 package com.lilyhien.service;
 
+import com.lilyhien.exception.ResourceNotFoundException;
+import com.lilyhien.exception.UnauthorizedException;
+import com.lilyhien.exception.ValidationException;
 import com.lilyhien.model.IngredientsCategory;
 import com.lilyhien.model.IngredientsItem;
 import com.lilyhien.model.Restaurant;
@@ -39,7 +42,7 @@ public class IngredientsServiceImpl implements  IngredientsService {
     public IngredientsCategory findIngredientCategoryById(Long id) throws Exception {
         Optional<IngredientsCategory> optIngredientsCategory = ingredientsCategoryRepository.findById(id);
         if (optIngredientsCategory.isEmpty()) {
-            throw new Exception("Category not found with category id: " + id);
+            throw new ResourceNotFoundException("Category not found with category id: " + id);
         }
         return optIngredientsCategory.get();
     }
@@ -67,7 +70,7 @@ public class IngredientsServiceImpl implements  IngredientsService {
         item.setCategory(ingredientsCategory);
 
         if (!ingredientsCategory.getRestaurant().getId().equals(restaurant.getId())) {
-            throw new Exception("You cannot add ingredients to another restaurant's category");
+            throw new ValidationException("You cannot add ingredients to another restaurant's category");
         }
         IngredientsItem ingredientsItem = ingredientsItemRepository.save(item);
         //after save, need to add to category List java object too, so they can sync with database
@@ -88,7 +91,7 @@ public class IngredientsServiceImpl implements  IngredientsService {
 
         Optional<IngredientsItem> optItem = ingredientsItemRepository.findById(ingredientId);
         if (optItem.isEmpty()) {
-            throw new Exception("Ingredient not found with item id: " + ingredientId);
+            throw new ResourceNotFoundException("Ingredient not found with item id: " + ingredientId);
         }
 
         IngredientsItem item = optItem.get();
@@ -96,7 +99,7 @@ public class IngredientsServiceImpl implements  IngredientsService {
         //verification
         Restaurant restaurant = restaurantService.findRestaurantByUserId(userId);
         if (!item.getRestaurant().getId().equals(restaurant.getId())) {
-            throw new Exception("Unauthorized: This ingredient belongs to another restaurant.");
+            throw new UnauthorizedException("Unauthorized: This ingredient belongs to another restaurant.");
         }
 
         item.setIsInStock(!item.getIsInStock());
