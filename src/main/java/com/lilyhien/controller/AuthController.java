@@ -9,6 +9,7 @@ import com.lilyhien.repository.UserRepository;
 import com.lilyhien.requestDto.LoginRequest;
 import com.lilyhien.response.AuthResponse;
 import com.lilyhien.service.CustomerUserDetailService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -74,7 +75,7 @@ public class AuthController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<AuthResponse> signIn(@RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> signIn(@Valid @RequestBody LoginRequest request) {
         //provide email
         //check if email exists in database, if not, tell user to create user
         //provide password , check
