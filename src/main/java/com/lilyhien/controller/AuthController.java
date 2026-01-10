@@ -41,7 +41,7 @@ public class AuthController {
     //ResponseEntity: shipping box (success 200 or error 400)
     //AuthResponse: the product inside the box - actual data - jwt token & message
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> createUser(@RequestBody User user) throws Exception {
+    public ResponseEntity<AuthResponse> createUser(@Valid @RequestBody User user) throws Exception {
 
         if (emailExists(user.getEmail())) {
             throw new Exception("Email is already in used with another account.");

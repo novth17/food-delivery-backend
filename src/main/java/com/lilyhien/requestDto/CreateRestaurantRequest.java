@@ -14,10 +14,13 @@ public class CreateRestaurantRequest {
 
     @NotBlank (message = "Restaurant name is required!")
     private String name;
+
     @NotBlank (message = "Restaurant description is required!")
     private String description;
+
     @NotBlank (message = "Restaurant cuisine type is required!")
     private String cuisineType;
+
     private Address address;
     private ContactInformation contactInformation;
     private String openingHours;

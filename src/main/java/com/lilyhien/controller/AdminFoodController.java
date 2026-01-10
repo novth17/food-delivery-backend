@@ -8,6 +8,7 @@ import com.lilyhien.response.MessageResponse;
 import com.lilyhien.service.FoodService;
 import com.lilyhien.service.RestaurantService;
 import com.lilyhien.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class AdminFoodController {
 
     @PostMapping()
     public ResponseEntity<Food> createFood(
-            @RequestBody CreateFoodRequest request,
+            @Valid @RequestBody CreateFoodRequest request,
             @RequestHeader("Authorization") String jwt)
             throws  Exception
     {
