@@ -1,6 +1,7 @@
 package com.lilyhien.service;
 
 import com.lilyhien.config.JwtProvider;
+import com.lilyhien.exception.ResourceNotFoundException;
 import com.lilyhien.model.User;
 import com.lilyhien.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -25,7 +26,7 @@ public class UserServiceImpl implements UserService {
         String email = jwtProvider.getEmailFromJwtToken(jwt);
         //null string check is needed because of String.valueOf() can return null
         if (email == null || email.equals("null")) {
-            throw new Exception("Invalid or expired session. Please log in again.");
+            throw new ResourceNotFoundException("Email is empty or User not found with email: " + email);
         }
         return findUserByEmail(email);
     }
@@ -34,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public User findUserByEmail(String email) throws Exception {
         User user = userRepository.findByEmail(email);
         if (user == null) {
-            throw new Exception("User not found");
+            throw new ResourceNotFoundException("User not found");
         }
         return user;
     }

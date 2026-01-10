@@ -130,7 +130,7 @@ public class RestaurantServiceImpl  implements  RestaurantService {
         Restaurant restaurant = findRestaurantById(restaurantId);
         FavoriteRestaurantDto favDto = new FavoriteRestaurantDto();
         favDto.setDescription(restaurant.getDescription());
-        favDto.setImages(restaurant.getImages());
+        favDto.setThumbnailImage(favDto.getThumbnailImage());
         favDto.setTitle(restaurant.getName());
         favDto.setId(restaurantId);
 
