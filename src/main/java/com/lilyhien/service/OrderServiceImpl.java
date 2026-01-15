@@ -20,7 +20,6 @@ import java.util.Optional;
 public class OrderServiceImpl implements OrderService{
 
     private final RestaurantRepository restaurantRepository;
-    private final OrderItemRepository orderItemRepository;
     private final UserRepository userRepository;
     private final CartService cartService;
     private final OrderRepository orderRepository;
