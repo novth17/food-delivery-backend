@@ -1,7 +1,6 @@
-# Online Food Ordering System
+# 🍱🍝Online Food Ordering System🍦🍰
 
 This project is a comprehensive backend solution for an online food delivery platform. It supports user authentication, restaurant management, food cataloging, and order processing.
-
 
 ## 🚀 Features
 ### Core Functionality
@@ -99,3 +98,8 @@ This project is a comprehensive backend solution for an online food delivery pla
 | PUT | `/api/admin/ingredients/{itemId}/stock` | Toggle the stock availability of a specific ingredient. |
 | GET | `/api/admin/ingredients/restaurant` | List all ingredients belonging to the user's restaurant. |
 | GET | `/api/admin/ingredients/restaurant/category` | List all ingredient categories belonging to the user's restaurant. |
+
+### Physical Entity-Relationship Diagram
+<img width="1693" height="1062" alt="architecture" src="https://github.com/user-attachments/assets/844c6d93-0c9c-4d45-a463-d467c05fb008" />
+
+
